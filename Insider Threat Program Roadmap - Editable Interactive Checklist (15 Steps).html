@@ -1,0 +1,894 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Insider Threat Program Roadmap - Editable Interactive Checklist (15 Steps)</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', 'Helvetica', sans-serif;
+            background: #f5f5f5;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 2.5em;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .progress-bar-container {
+            width: 100%;
+            background: #e0e0e0;
+            border-radius: 20px;
+            height: 30px;
+            margin: 20px 0 40px 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #5a9367, #4a7ba7, #7b5ba1, #a94442);
+            border-radius: 20px;
+            transition: width 0.5s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 0.9em;
+        }
+
+        .phase {
+            display: flex;
+            margin-bottom: 20px;
+            min-height: 150px;
+            position: relative;
+            transition: opacity 0.3s ease;
+        }
+
+        .phase.completed {
+            opacity: 0.6;
+        }
+
+        .phase-label {
+            width: 250px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 1.3em;
+            padding: 20px;
+            position: relative;
+            clip-path: polygon(0 0, 85% 0, 100% 50%, 85% 100%, 0 100%);
+        }
+
+        .phase-label .icon {
+            font-size: 3em;
+            margin-bottom: 10px;
+        }
+
+        .phase-checkbox {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            width: 25px;
+            height: 25px;
+            cursor: pointer;
+            z-index: 10;
+        }
+
+        .phase-content {
+            flex: 1;
+            display: flex;
+            gap: 15px;
+            padding: 20px;
+            align-items: stretch;
+            flex-wrap: wrap;
+        }
+
+        .step {
+            background: linear-gradient(135deg, rgba(255,255,255,0.9), rgba(255,255,255,0.6));
+            border-left: 4px solid;
+            padding: 15px;
+            border-radius: 5px;
+            flex: 1;
+            min-width: 200px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .step.completed {
+            opacity: 0.5;
+            text-decoration: line-through;
+        }
+
+        .step.completed h3::before {
+            content: "✓ ";
+            color: #2ca02c;
+            font-size: 1.2em;
+        }
+
+        .step-checkbox-container {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+        }
+
+        .step-checkbox {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+
+        .step-content {
+            flex: 1;
+        }
+
+        .step h3 {
+            font-size: 0.95em;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+
+        .step p {
+            font-size: 0.85em;
+            line-height: 1.4;
+            color: #333;
+        }
+
+        .step.new-addition {
+            background: linear-gradient(135deg, #fff0f0, #ffe6e6);
+            border-left: 5px solid #d62728;
+            border-right: 3px solid #d62728;
+            position: relative;
+        }
+
+        .step.new-addition::before {
+            content: "🔴 RED TEAM";
+            position: absolute;
+            top: -10px;
+            right: 10px;
+            background: #d62728;
+            color: white;
+            padding: 3px 10px;
+            border-radius: 15px;
+            font-size: 0.7em;
+            font-weight: bold;
+        }
+
+        /* Phase-specific colors */
+        .phase-initiation .phase-label {
+            background: linear-gradient(135deg, #5a9367, #76a97f);
+        }
+
+        .phase-initiation .step {
+            border-left-color: #5a9367;
+            background: linear-gradient(135deg, #e8f5e8, #f0f8f0);
+        }
+
+        .phase-planning .phase-label {
+            background: linear-gradient(135deg, #4a7ba7, #5a8bb8);
+        }
+
+        .phase-planning .step {
+            border-left-color: #4a7ba7;
+            background: linear-gradient(135deg, #e6f2ff, #f0f6ff);
+        }
+
+        .phase-operations .phase-label {
+            background: linear-gradient(135deg, #7b5ba1, #8b6bb1);
+        }
+
+        .phase-operations .step {
+            border-left-color: #7b5ba1;
+            background: linear-gradient(135deg, #f0e6ff, #f5f0ff);
+        }
+
+        .phase-reporting .phase-label {
+            background: linear-gradient(135deg, #a94442, #c05654);
+        }
+
+        .phase-reporting .step {
+            border-left-color: #a94442;
+            background: linear-gradient(135deg, #ffe6e6, #fff0f0);
+        }
+
+        .sub-steps {
+            margin-top: 10px;
+            padding-left: 15px;
+            border-left: 2px solid #ddd;
+        }
+
+        .sub-step {
+            font-size: 0.8em;
+            padding: 5px 0;
+            color: #555;
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+        }
+
+        .sub-step strong {
+            color: #333;
+        }
+
+        .sub-step input[type="checkbox"] {
+            margin-top: 3px;
+            cursor: pointer;
+        }
+
+        .continuous-improvement {
+            margin-top: 40px;
+            padding: 20px;
+            background: linear-gradient(135deg, #a94442, #c05654);
+            color: white;
+            border-radius: 50px;
+            text-align: center;
+            font-size: 1.2em;
+            font-weight: bold;
+            position: relative;
+        }
+
+        .continuous-improvement::before {
+            content: "↺";
+            position: absolute;
+            left: 20px;
+            font-size: 2em;
+        }
+
+        .continuous-improvement::after {
+            content: "→";
+            position: absolute;
+            right: 20px;
+            font-size: 2em;
+        }
+
+        .step.full-width {
+            min-width: 100%;
+        }
+
+        .controls {
+            margin-bottom: 30px;
+            padding: 20px;
+            background: #f0f8ff;
+            border-radius: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .controls button {
+            padding: 10px 20px;
+            font-size: 1em;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .controls button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        .btn-reset {
+            background: #d62728;
+            color: white;
+        }
+
+        .btn-check-all {
+            background: #2ca02c;
+            color: white;
+        }
+
+        .btn-export {
+            background: #4a7ba7;
+            color: white;
+        }
+
+        .btn-save {
+            background: #ff7f0e;
+            color: white;
+        }
+
+        .stats {
+            display: flex;
+            gap: 20px;
+            font-size: 0.95em;
+        }
+
+        .stat-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .stat-item .label {
+            color: #666;
+        }
+
+        .stat-item .value {
+            font-weight: bold;
+            color: #333;
+        }
+
+        /* Editable text styling */
+        [contenteditable="true"] {
+            outline: 2px dashed transparent;
+            outline-offset: 2px;
+            transition: outline-color 0.2s;
+        }
+
+        [contenteditable="true"]:hover {
+            outline-color: #4a7ba7;
+            background: rgba(74, 123, 167, 0.05);
+        }
+
+        [contenteditable="true"]:focus {
+            outline-color: #5a8bb8;
+            background: rgba(74, 123, 167, 0.1);
+        }
+
+        @media (max-width: 1200px) {
+            .phase-content {
+                flex-direction: column;
+            }
+
+            .step {
+                min-width: 100%;
+            }
+
+            .phase-label {
+                width: 200px;
+                font-size: 1.1em;
+            }
+
+            .controls {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .stats {
+                flex-direction: column;
+                gap: 10px;
+            }
+        }
+
+        .edit-mode-banner {
+            background: #fff3cd;
+            border: 2px solid #ffc107;
+            padding: 10px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            text-align: center;
+            font-weight: bold;
+            color: #856404;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 contenteditable="true">The Insider Threat Program Roadmap: A 15-Step Lifecycle</h1>
+        <p style="text-align: center; color: #d62728; font-weight: bold; margin-bottom: 10px; font-size: 1.1em;" contenteditable="true">
+            🔴 Enhanced with Red Team Testing & Validation (Step #11)
+        </p>
+        <div class="edit-mode-banner">
+            ✏️ EDIT MODE ENABLED: Click any text to edit • Checkboxes track progress • Auto-saves to browser
+        </div>
+
+        <!-- Progress Bar -->
+        <div class="progress-bar-container">
+            <div class="progress-bar" id="progressBar">0%</div>
+        </div>
+
+        <!-- Controls -->
+        <div class="controls">
+            <div class="stats">
+                <div class="stat-item">
+                    <span class="label">Total Steps:</span>
+                    <span class="value" id="totalSteps">0</span>
+                </div>
+                <div class="stat-item">
+                    <span class="label">Completed:</span>
+                    <span class="value" id="completedSteps">0</span>
+                </div>
+                <div class="stat-item">
+                    <span class="label">Remaining:</span>
+                    <span class="value" id="remainingSteps">0</span>
+                </div>
+            </div>
+            <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                <button class="btn-check-all" onclick="checkAllSteps()">✓ Check All</button>
+                <button class="btn-reset" onclick="resetAllSteps()">↺ Reset All</button>
+                <button class="btn-export" onclick="exportProgress()">📊 Export Progress</button>
+                <button class="btn-save" onclick="saveAsHTML()">💾 Save HTML</button>
+            </div>
+        </div>
+
+        <!-- PHASE I - INITIATION -->
+        <div class="phase phase-initiation" data-phase="initiation">
+            <input type="checkbox" class="phase-checkbox" id="phase-initiation" onchange="updatePhaseStatus('initiation')">
+            <div class="phase-label">
+                <div class="icon">🛡️</div>
+                <div contenteditable="true">PHASE I - INITIATION</div>
+            </div>
+            <div class="phase-content">
+                <div class="step">
+                    <div class="step-checkbox-container">
+                        <input type="checkbox" class="step-checkbox" data-step="trigger" onchange="updateProgress()">
+                        <div class="step-content">
+                            <h3 contenteditable="true">Triggers for Program Launch</h3>
+                            <p contenteditable="true">Initiated by specific security incidents, regulatory compliance, or broad risk assessments.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="step">
+                    <div class="step-checkbox-container">
+                        <input type="checkbox" class="step-checkbox" data-step="s1" onchange="updateProgress()">
+                        <div class="step-content">
+                            <h3 contenteditable="true">#1: Initial Planning</h3>
+                            <p contenteditable="true">Primary starting point where baseline objectives of the program are defined.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="step">
+                    <div class="step-checkbox-container">
+                        <input type="checkbox" class="step-checkbox" data-step="s2" onchange="updateProgress()">
+                        <div class="step-content">
+                            <h3 contenteditable="true">#2: Identify Stakeholders</h3>
+                            <p contenteditable="true">Cross-functional collaboration involving C-Suite, Financial, Legal, Security, IT/Cyber, HR, Communications, and Ethics.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- PHASE II - PLANNING -->
+        <div class="phase phase-planning" data-phase="planning">
+            <input type="checkbox" class="phase-checkbox" id="phase-planning" onchange="updatePhaseStatus('planning')">
+            <div class="phase-label">
+                <div class="icon">📋</div>
+                <div contenteditable="true">PHASE II - PLANNING</div>
+            </div>
+            <div class="phase-content">
+                <div class="step">
+                    <div class="step-checkbox-container">
+                        <input type="checkbox" class="step-checkbox" data-step="s3" onchange="updateProgress()">
+                        <div class="step-content">
+                            <h3 contenteditable="true">#3: Achieve & Sustain Leadership Buy-In</h3>
+                            <p contenteditable="true">Securing long-term commitment from executive leadership for resources and authority.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="step">
+                    <div class="step-checkbox-container">
+                        <input type="checkbox" class="step-checkbox" data-step="s4" onchange="updateProgress()">
+                        <div class="step-content">
+                            <h3 contenteditable="true">#4: Risk Management Process</h3>
+                            <p contenteditable="true"><strong>Identify Critical Assets</strong></p>
+                            <p contenteditable="true"><strong>Identify Threats</strong></p>
+                            <p contenteditable="true"><strong>Conduct Vulnerability Assessment</strong></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="step">
+                    <div class="step-checkbox-container">
+                        <input type="checkbox" class="step-checkbox" data-step="s5" onchange="updateProgress()">
+                        <div class="step-content">
+                            <h3 contenteditable="true">#5: Detailed Project Planning</h3>
+                            <p contenteditable="true">Translating strategy into actionable project timelines and milestones.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="step">
+                    <div class="step-checkbox-container">
+                        <input type="checkbox" class="step-checkbox" data-step="s6" onchange="updateProgress()">
+                        <div class="step-content">
+                            <h3 contenteditable="true">#6: Develop Governance Structure and Policy</h3>
+                            <p contenteditable="true">Establishing rules, roles, and legal frameworks governing program actions.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="step">
+                    <div class="step-checkbox-container">
+                        <input type="checkbox" class="step-checkbox" data-step="s7" onchange="updateProgress()">
+                        <div class="step-content">
+                            <h3 contenteditable="true">#7: Communications, Training, and Awareness</h3>
+                            <p contenteditable="true">Executing strategy for initial roll-out, periodic training, and ad hoc updates.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- PHASE III - OPERATIONS -->
+        <div class="phase phase-operations" data-phase="operations">
+            <input type="checkbox" class="phase-checkbox" id="phase-operations" onchange="updatePhaseStatus('operations')">
+            <div class="phase-label">
+                <div class="icon">🔍</div>
+                <div contenteditable="true">PHASE III - OPERATIONS</div>
+            </div>
+            <div class="phase-content">
+                <div class="step">
+                    <div class="step-checkbox-container">
+                        <input type="checkbox" class="step-checkbox" data-step="s8" onchange="updateProgress()">
+                        <div class="step-content">
+                            <h3 contenteditable="true">#8: Develop Detection Indicators</h3>
+                            <p contenteditable="true">Identifying specific behaviors or technical signals indicating emerging insider threats. Map to MITRE ATT&CK framework.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="step">
+                    <div class="step-checkbox-container">
+                        <input type="checkbox" class="step-checkbox" data-step="s9" onchange="updateProgress()">
+                        <div class="step-content">
+                            <h3 contenteditable="true">#9: Data and Tool Requirements</h3>
+                            <p contenteditable="true">Determining necessary software and data sources to monitor indicators. SIEM, UEBA, DLP tools.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="step">
+                    <div class="step-checkbox-container">
+                        <input type="checkbox" class="step-checkbox" data-step="s10" onchange="updateProgress()">
+                        <div class="step-content">
+                            <h3 contenteditable="true">#10: Data Fusion</h3>
+                            <p contenteditable="true">Integrating various data streams into a single analytical environment for better visibility and correlation.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- STEP 11: RED TEAM TESTING (standalone, not 10.5) -->
+                <div class="step new-addition full-width">
+                    <div class="step-checkbox-container">
+                        <input type="checkbox" class="step-checkbox" data-step="s11" onchange="updateProgress()">
+                        <div class="step-content">
+                            <h3 contenteditable="true">#11: Red Team Testing & Validation</h3>
+                            <p contenteditable="true">Validate detection effectiveness through adversary simulation before full production deployment.</p>
+                            <div class="sub-steps">
+                                <div class="sub-step">
+                                    <input type="checkbox" class="step-checkbox" data-step="s11.1" onchange="updateProgress()">
+                                    <span contenteditable="true"><strong>11.1 Develop Test Scenarios:</strong> Create realistic insider threat test cases (JIT bypass, credential theft, data exfiltration)</span>
+                                </div>
+                                <div class="sub-step">
+                                    <input type="checkbox" class="step-checkbox" data-step="s11.2" onchange="updateProgress()">
+                                    <span contenteditable="true"><strong>11.2 Execute Red Team Tests:</strong> Simulate insider attacks to test detection coverage and response capabilities</span>
+                                </div>
+                                <div class="sub-step">
+                                    <input type="checkbox" class="step-checkbox" data-step="s11.3" onchange="updateProgress()">
+                                    <span contenteditable="true"><strong>11.3 Detection Gap Analysis:</strong> Identify missed detections, false positives/negatives, and blind spots</span>
+                                </div>
+                                <div class="sub-step">
+                                    <input type="checkbox" class="step-checkbox" data-step="s11.4" onchange="updateProgress()">
+                                    <span contenteditable="true"><strong>11.4 Remediate Detection Gaps:</strong> Tune rules, add missing detections, fix false positives before production</span>
+                                </div>
+                            </div>
+                            <p style="margin-top: 10px; font-size: 0.85em; color: #d62728; font-weight: bold;" contenteditable="true">
+                                ✓ Success Criteria: 90%+ detection rate, &lt;5% false positives, MTTD &lt;15 minutes
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- STEP 12: Analysis & Incident Management (was #11) -->
+                <div class="step full-width">
+                    <div class="step-checkbox-container">
+                        <input type="checkbox" class="step-checkbox" data-step="s12" onchange="updateProgress()">
+                        <div class="step-content">
+                            <h3 contenteditable="true">#12: Analysis & Incident Management</h3>
+                            <p contenteditable="true">Operational monitoring and response to insider threat alerts.</p>
+                            <div class="sub-steps">
+                                <div class="sub-step">
+                                    <input type="checkbox" class="step-checkbox" data-step="s12.1" onchange="updateProgress()">
+                                    <span contenteditable="true"><strong>12.1 Triage:</strong> Initial evaluation and prioritization of alerts</span>
+                                </div>
+                                <div class="sub-step">
+                                    <input type="checkbox" class="step-checkbox" data-step="s12.2" onchange="updateProgress()">
+                                    <span contenteditable="true"><strong>12.2 Internal Investigation:</strong> Deep dive analysis and evidence collection</span>
+                                </div>
+                                <div class="sub-step">
+                                    <input type="checkbox" class="step-checkbox" data-step="s12.3" onchange="updateProgress()">
+                                    <span contenteditable="true"><strong>12.3 Reporting:</strong> Document findings and notify stakeholders</span>
+                                </div>
+                                <div class="sub-step">
+                                    <input type="checkbox" class="step-checkbox" data-step="s12.4" onchange="updateProgress()">
+                                    <span contenteditable="true"><strong>12.4 External Investigation (if required):</strong> Coordinate with law enforcement</span>
+                                </div>
+                                <div class="sub-step">
+                                    <input type="checkbox" class="step-checkbox" data-step="s12.5" onchange="updateProgress()">
+                                    <span contenteditable="true"><strong>12.5 Final Action:</strong> Remediation, termination, or legal action</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- PHASE IV - REPORTING & FEEDBACK -->
+        <div class="phase phase-reporting" data-phase="reporting">
+            <input type="checkbox" class="phase-checkbox" id="phase-reporting" onchange="updatePhaseStatus('reporting')">
+            <div class="phase-label">
+                <div class="icon">📊</div>
+                <div contenteditable="true">PHASE IV - REPORTING<br>& FEEDBACK</div>
+            </div>
+            <div class="phase-content">
+                <!-- STEP 13: Management Reporting (was #12) -->
+                <div class="step">
+                    <div class="step-checkbox-container">
+                        <input type="checkbox" class="step-checkbox" data-step="s13" onchange="updateProgress()">
+                        <div class="step-content">
+                            <h3 contenteditable="true">#13: Management Reporting</h3>
+                            <p contenteditable="true">Providing formal updates on program performance, detected risks, and mitigation outcomes to executives.</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- STEP 14: Feedback & Lessons Learned (was #13) -->
+                <div class="step">
+                    <div class="step-checkbox-container">
+                        <input type="checkbox" class="step-checkbox" data-step="s14" onchange="updateProgress()">
+                        <div class="step-content">
+                            <h3 contenteditable="true">#14: Feedback & Lessons Learned</h3>
+                            <p contenteditable="true">Analyzing performance to identify gaps, improve detection rules, and refine processes based on real incidents.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Continuous Improvement Cycle -->
+        <div class="continuous-improvement" contenteditable="true">
+            Continuous Improvement Cycle
+        </div>
+
+        <div style="margin-top: 30px; padding: 20px; background: #f9f9f9; border-radius: 10px;">
+            <h3 style="color: #333; margin-bottom: 10px;">💡 How This Interactive Roadmap Works</h3>
+            <ul style="line-height: 1.8; color: #555;">
+                <li>✏️ <strong>Click any text to edit</strong> - All text is editable (titles, descriptions, step numbers)</li>
+                <li>✓ <strong>Check off items</strong> as you complete each step - Track your progress</li>
+                <li>📊 <strong>Progress bar</strong> updates automatically showing completion percentage</li>
+                <li>💾 <strong>Auto-save:</strong> Checkbox progress saves to your browser automatically</li>
+                <li>📤 <strong>Export progress:</strong> Click "Export Progress" for CSV report</li>
+                <li>💾 <strong>Save HTML:</strong> Click "Save HTML" to download your customized version</li>
+                <li>🎯 <strong>Phase checkboxes:</strong> Check entire phase to mark all steps complete</li>
+            </ul>
+        </div>
+
+        <div style="margin-top: 20px; text-align: center; color: #888; font-size: 0.9em;">
+            <p contenteditable="true">Source: Based on Carnegie Mellon SEI Insider Threat Framework</p>
+            <p contenteditable="true">Enhanced with Red Team Testing (Step #11) | Editable Interactive Version | April 2026</p>
+        </div>
+    </div>
+
+    <script>
+        // Initialize on page load
+        window.addEventListener('load', function() {
+            loadProgress();
+            updateProgress();
+        });
+
+        // Update progress bar and statistics
+        function updateProgress() {
+            const checkboxes = document.querySelectorAll('.step-checkbox');
+            const total = checkboxes.length;
+            let completed = 0;
+
+            checkboxes.forEach(checkbox => {
+                if (checkbox.checked) {
+                    completed++;
+                    const parent = checkbox.closest('.step, .sub-step');
+                    if (parent) parent.classList.add('completed');
+                } else {
+                    const parent = checkbox.closest('.step, .sub-step');
+                    if (parent) parent.classList.remove('completed');
+                }
+            });
+
+            const percentage = Math.round((completed / total) * 100);
+
+            // Update progress bar
+            const progressBar = document.getElementById('progressBar');
+            progressBar.style.width = percentage + '%';
+            progressBar.textContent = percentage + '% Complete';
+
+            // Update statistics
+            document.getElementById('totalSteps').textContent = total;
+            document.getElementById('completedSteps').textContent = completed;
+            document.getElementById('remainingSteps').textContent = total - completed;
+
+            // Save progress
+            saveProgress();
+        }
+
+        // Update phase status
+        function updatePhaseStatus(phaseId) {
+            const phaseCheckbox = document.getElementById('phase-' + phaseId);
+            const phase = document.querySelector(`[data-phase="${phaseId}"]`);
+            const stepCheckboxes = phase.querySelectorAll('.step-checkbox');
+
+            stepCheckboxes.forEach(checkbox => {
+                checkbox.checked = phaseCheckbox.checked;
+            });
+
+            if (phaseCheckbox.checked) {
+                phase.classList.add('completed');
+            } else {
+                phase.classList.remove('completed');
+            }
+
+            updateProgress();
+        }
+
+        // Check all steps
+        function checkAllSteps() {
+            const checkboxes = document.querySelectorAll('.step-checkbox, .phase-checkbox');
+            checkboxes.forEach(checkbox => {
+                checkbox.checked = true;
+            });
+
+            document.querySelectorAll('.phase').forEach(phase => {
+                phase.classList.add('completed');
+            });
+
+            updateProgress();
+        }
+
+        // Reset all steps
+        function resetAllSteps() {
+            if (confirm('Are you sure you want to reset all progress? This cannot be undone.')) {
+                const checkboxes = document.querySelectorAll('.step-checkbox, .phase-checkbox');
+                checkboxes.forEach(checkbox => {
+                    checkbox.checked = false;
+                });
+
+                document.querySelectorAll('.phase').forEach(phase => {
+                    phase.classList.remove('completed');
+                });
+
+                updateProgress();
+            }
+        }
+
+        // Save progress to localStorage
+        function saveProgress() {
+            const checkboxes = document.querySelectorAll('.step-checkbox');
+            const progress = {};
+
+            checkboxes.forEach(checkbox => {
+                const stepId = checkbox.getAttribute('data-step');
+                progress[stepId] = checkbox.checked;
+            });
+
+            localStorage.setItem('insiderThreatProgress', JSON.stringify(progress));
+        }
+
+        // Load progress from localStorage
+        function loadProgress() {
+            const saved = localStorage.getItem('insiderThreatProgress');
+            if (!saved) return;
+
+            const progress = JSON.parse(saved);
+
+            Object.keys(progress).forEach(stepId => {
+                const checkbox = document.querySelector(`[data-step="${stepId}"]`);
+                if (checkbox) {
+                    checkbox.checked = progress[stepId];
+                }
+            });
+
+            // Update phase checkboxes
+            updatePhaseCheckboxes();
+        }
+
+        // Update phase checkboxes based on step completion
+        function updatePhaseCheckboxes() {
+            const phases = ['initiation', 'planning', 'operations', 'reporting'];
+
+            phases.forEach(phaseId => {
+                const phase = document.querySelector(`[data-phase="${phaseId}"]`);
+                const phaseCheckbox = document.getElementById('phase-' + phaseId);
+                const stepCheckboxes = phase.querySelectorAll('.step-checkbox');
+
+                let allChecked = true;
+                stepCheckboxes.forEach(checkbox => {
+                    if (!checkbox.checked) allChecked = false;
+                });
+
+                phaseCheckbox.checked = allChecked;
+                if (allChecked) {
+                    phase.classList.add('completed');
+                }
+            });
+        }
+
+        // Export progress as CSV
+        function exportProgress() {
+            const checkboxes = document.querySelectorAll('.step-checkbox');
+            let csv = 'Step ID,Step Name,Status,Date Completed\n';
+            const today = new Date().toISOString().split('T')[0];
+
+            checkboxes.forEach(checkbox => {
+                const stepId = checkbox.getAttribute('data-step');
+                const stepElement = checkbox.closest('.step, .sub-step');
+                const stepName = stepElement.querySelector('h3, strong')?.textContent.trim() ||
+                                stepElement.textContent.trim().split(':')[0];
+                const status = checkbox.checked ? 'Complete' : 'Incomplete';
+                const dateCompleted = checkbox.checked ? today : '';
+
+                csv += `"${stepId}","${stepName.replace(/"/g, '""')}","${status}","${dateCompleted}"\n`;
+            });
+
+            // Download CSV
+            const blob = new Blob([csv], { type: 'text/csv' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `insider-threat-progress-${today}.csv`;
+            a.click();
+            window.URL.revokeObjectURL(url);
+
+            alert('Progress exported! Check your downloads folder.');
+        }
+
+        // Save as HTML
+        function saveAsHTML() {
+            const html = document.documentElement.outerHTML;
+            const blob = new Blob([html], { type: 'text/html' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            const today = new Date().toISOString().split('T')[0];
+            a.href = url;
+            a.download = `insider-threat-roadmap-${today}.html`;
+            a.click();
+            window.URL.revokeObjectURL(url);
+
+            alert('HTML file saved! Your edits and checkbox states are preserved.');
+        }
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', function(e) {
+            // Ctrl/Cmd + S to save HTML
+            if ((e.ctrlKey || e.metaKey) && e.key === 's') {
+                e.preventDefault();
+                saveAsHTML();
+            }
+
+            // Ctrl/Cmd + E to export CSV
+            if ((e.ctrlKey || e.metaKey) && e.key === 'e') {
+                e.preventDefault();
+                exportProgress();
+            }
+
+            // Ctrl/Cmd + Shift + R to reset
+            if ((e.ctrlKey || e.metaKey) && e.key === 'r' && e.shiftKey) {
+                e.preventDefault();
+                resetAllSteps();
+            }
+        });
+    </script>
+</body>
+</html>
